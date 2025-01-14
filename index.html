@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stocks Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const countryStocks = {
+                "United States": ["Apple", "Microsoft", "Amazon", "Google", "Facebook", "Tesla", "Berkshire Hathaway", "Johnson & Johnson", "Visa", "Procter & Gamble"],
+                "China": ["Alibaba", "Tencent", "Baidu", "JD.com", "Ping An Insurance", "China Mobile", "China Construction Bank", "ICBC", "NetEase", "PetroChina"],
+                "Japan": ["Toyota", "SoftBank", "Sony", "Mitsubishi UFJ", "Nintendo", "Honda", "Hitachi", "Panasonic", "Fujitsu", "Canon"],
+                "Germany": ["Volkswagen", "Siemens", "Allianz", "Daimler", "BASF", "BMW", "Bayer", "Deutsche Telekom", "Adidas", "Henkel"],
+                "India": ["Reliance Industries", "TCS", "HDFC Bank", "Infosys", "ICICI Bank", "Bajaj Finance", "Wipro", "Bharti Airtel", "Maruti Suzuki", "State Bank of India"],
+                "United Kingdom": ["HSBC", "BP", "Diageo", "GlaxoSmithKline", "Unilever", "AstraZeneca", "British American Tobacco", "Barclays", "Vodafone", "Rio Tinto"],
+                "France": ["LVMH", "TotalEnergies", "Sanofi", "Schneider Electric", "Airbus", "AXA", "Hermes", "L'Oreal", "BNP Paribas", "Kering"],
+                "Italy": ["Enel", "Intesa Sanpaolo", "Ferrari", "UniCredit", "Generali", "ENI", "Moncler", "Leonardo", "Pirelli", "Fiat Chrysler"],
+                "Canada": ["Royal Bank of Canada", "TD Bank", "Shopify", "Brookfield", "Canadian National Railway", "Enbridge", "Scotiabank", "BCE", "Suncor Energy", "Canadian Pacific"],
+                "South Korea": ["Samsung", "Hyundai", "SK Hynix", "LG Chem", "Kakao", "POSCO", "KB Financial", "Shinhan Financial", "Naver", "Celltrion"]
+            };
+
+            const countryName = document.getElementById("country-name");
+            const stockDropdown = document.getElementById("stock-dropdown");
+            const countrySelector = document.getElementById("country-selector");
+            const form = document.querySelector("form");
+
+            countrySelector.addEventListener("change", (event) => {
+                const selectedCountry = event.target.value;
+
+                // Update the country name
+                countryName.textContent = `Selected Country: ${selectedCountry}`;
+
+                // Update the stock dropdown
+                stockDropdown.innerHTML = ""; // Clear existing options
+                if (countryStocks[selectedCountry]) {
+                    countryStocks[selectedCountry].forEach(stock => {
+                        const option = document.createElement("option");
+                        option.value = stock.toLowerCase().replace(/\s+/g, '-');
+                        option.textContent = stock;
+                        stockDropdown.appendChild(option);
+                    });
+                }
+            });
+
+            form.addEventListener("submit", (event) => {
+                event.preventDefault(); // Prevent the default form submission
+
+                const selectedCountry = countrySelector.value;
+                const selectedStock = stockDropdown.value;
+                const selectedDate = document.getElementById("date").value;
+
+                // Validate input
+                if (!selectedCountry || !selectedStock || !selectedDate) {
+                    alert("Please select a country, stock, and date.");
+                    return;
+                }
+
+                // Prepare the data to be sent to the Lambda API
+                const requestData = {
+                    country: selectedCountry,
+                    stock: selectedStock,
+                    date: selectedDate
+                };
+
+                // Send the data to AWS Lambda API via a POST request
+                fetch("https://aa2sdhueqa.execute-api.eu-west-1.amazonaws.com/default/stockTrackerByRohanAndKhush", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response from the API
+                    console.log("Response from Lambda:", data);
+                    alert("Data submitted successfully!");
+                })
+                .catch(error => {
+                    // Handle any errors that occurred during the request
+                    console.error("Error sending data to Lambda:", error);
+                    alert(`Error Occured ${error}`);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <main>
+        <section>
+            <h1 id="country-name">Selected Country: </h1>
+            <label for="country-selector">Select a Country:</label>
+            <select id="country-selector">
+                <option value="">Select a country</option>
+                <option value="United States">United States</option>
+                <option value="China">China</option>
+                <option value="Japan">Japan</option>
+                <option value="Germany">Germany</option>
+                <option value="India">India</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="France">France</option>
+                <option value="Italy">Italy</option>
+                <option value="Canada">Canada</option>
+                <option value="South Korea">South Korea</option>
+            </select>
+            <p>Please select a stock from the dropdown below:</p>
+            <form>
+                <label for="stock-dropdown">Stocks:</label>
+                <select id="stock-dropdown" name="stock">
+                    <option value="">Select a stock</option>
+                </select>
+                <br><br>
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+                <br><br>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Filtered Stocks. All rights reserved.</p>
+    </footer>
+</body>
+</html>
