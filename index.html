@@ -65,23 +65,27 @@
 
                 // Send the data to AWS Lambda API via a POST request
                 fetch("https://aa2sdhueqa.execute-api.eu-west-1.amazonaws.com/default/stockTrackerByRohanAndKhush", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(requestData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Handle the response from the API
-                    console.log("Response from Lambda:", data);
-                    alert("Data submitted successfully!");
-                })
-                .catch(error => {
-                    // Handle any errors that occurred during the request
-                    console.error("Error sending data to Lambda:", error);
-                    alert(`Error Occured ${error}`);
-                });
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(requestData)
+				})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+					return response.json();
+				})
+				.then(data => {
+					console.log("Response from Lambda:", data);
+					alert("Data submitted successfully!");
+				})
+				.catch(error => {
+					console.error("Error:", error.message);
+					alert(`Error Occurred: ${error.message}`);
+				});
+
             });
         });
     </script>
