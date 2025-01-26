@@ -32,7 +32,7 @@
                 countryName.textContent = `Selected Country: ${selectedCountry}`;
 
                 // Update the stock dropdown
-                stockDropdown.innerHTML = ""; // Clear existing options
+                stockDropdown.innerHTML = "<option value=''>Select a stock</option>"; // Clear existing options
                 if (countryStocks[selectedCountry]) {
                     countryStocks[selectedCountry].forEach(stock => {
                         const option = document.createElement("option");
@@ -43,9 +43,10 @@
                 }
             });
 
-            form.addEventListener("submit", (event) => {
+            form.addEventListener("submit", async (event) => {
                 event.preventDefault(); // Prevent the default form submission
 
+                // Get form values
                 const selectedCountry = countrySelector.value;
                 const selectedStock = stockDropdown.value;
                 const selectedDate = document.getElementById("date").value;
@@ -56,36 +57,24 @@
                     return;
                 }
 
-                // Prepare the data to be sent to the Lambda API
-                const requestData = {
-                    country: selectedCountry,
-                    stock: selectedStock,
-                    date: selectedDate
-                };
+                // Construct query string parameters
+                const queryString = `?country=${encodeURIComponent(selectedCountry)}&stock=${encodeURIComponent(selectedStock)}&date=${encodeURIComponent(selectedDate)}`;
 
-                // Send the data to AWS Lambda API via a POST request
-                fetch("https://qqwgnh4jg5.execute-api.eu-west-1.amazonaws.com/stock/stock_tracker", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify(requestData)
-				})
-				.then(response => {
-					if (!response.ok) {
-						throw new Error(`HTTP error! Status: ${response.status}`);
-					}
-					return response.json();
-				})
-				.then(data => {
-					console.log("Response from Lambda:", data);
-					alert("Data submitted successfully!");
-				})
-				.catch(error => {
-					console.error("Error:", error.message);
-					alert(`Error Occurred: ${error.message}`);
-				});
+                try {
+                    const apiUrl = "https://wv4sbl11ec.execute-api.eu-west-1.amazonaws.com/stock/stock_tracker";
+                    const response = await fetch(apiUrl + queryString, {
+                        method: "GET",
+                    });
 
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    document.getElementById("response").innerText = `Success: ${JSON.stringify(result, null, 2)}`;
+                } catch (error) {
+                    document.getElementById("response").innerText = `Error: ${error.message}`;
+                }
             });
         });
     </script>
@@ -120,6 +109,7 @@
                 <br><br>
                 <button type="submit">Submit</button>
             </form>
+            <pre id="response"></pre>
         </section>
     </main>
 
