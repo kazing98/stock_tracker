@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stocks Analysis Result</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Parse query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const data = urlParams.get("data");
+
+            if (data) {
+                // Display the parsed data
+                const parsedData = JSON.parse(decodeURIComponent(data));
+                document.getElementById("result").textContent = JSON.stringify(parsedData, null, 2);
+            } else {
+                document.getElementById("result").textContent = "No data found.";
+            }
+        });
+    </script>
+</head>
+<body>
+    <main>
+        <section>
+            <h1>Stocks Analysis Result</h1>
+            <pre id="result"></pre>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Stock Tracker. All rights reserved.</p>
+    </footer>
+</body>
+</html>

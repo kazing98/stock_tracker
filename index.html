@@ -57,11 +57,10 @@
                     return;
                 }
 
-                // Construct query string parameters
-                const queryString = `?country=${encodeURIComponent(selectedCountry)}&stock=${encodeURIComponent(selectedStock)}&date=${encodeURIComponent(selectedDate)}`;
-
                 try {
                     const apiUrl = "https://wv4sbl11ec.execute-api.eu-west-1.amazonaws.com/stock/stock_tracker";
+					// Construct query string parameters
+					const queryString = `?country=${encodeURIComponent(selectedCountry)}&stock=${encodeURIComponent(selectedStock)}&date=${encodeURIComponent(selectedDate)}`;
                     const response = await fetch(apiUrl + queryString, {
                         method: "GET",
                     });
@@ -71,7 +70,11 @@
                     }
 
                     const result = await response.json();
-                    document.getElementById("response").innerText = `Success: ${JSON.stringify(result, null, 2)}`;
+                    //document.getElementById("response").innerText = `Success: ${JSON.stringify(result, null, 2)}`;
+					
+					// Redirect to result.html with the response data in query parameters
+					const encodedResult = encodeURIComponent(JSON.stringify(result));
+					window.location.href = `result.html?data=${encodedResult}`;
                 } catch (error) {
                     document.getElementById("response").innerText = `Error: ${error.message}`;
                 }
@@ -114,7 +117,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 Filtered Stocks. All rights reserved.</p>
+        <p>&copy; 2025 2025 Stock Tracker. All rights reserved.</p>
     </footer>
 </body>
 </html>
