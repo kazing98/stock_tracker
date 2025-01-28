@@ -24,15 +24,14 @@
             const stockDropdown = document.getElementById("stock-dropdown");
             const countrySelector = document.getElementById("country-selector");
             const form = document.querySelector("form");
+            const loader = document.getElementById("loader");
 
             countrySelector.addEventListener("change", (event) => {
                 const selectedCountry = event.target.value;
 
-                // Update the country name
                 countryName.textContent = `Selected Country: ${selectedCountry}`;
 
-                // Update the stock dropdown
-                stockDropdown.innerHTML = "<option value=''>Select a stock</option>"; // Clear existing options
+                stockDropdown.innerHTML = "<option value=''>Select a stock</option>"; 
                 if (countryStocks[selectedCountry]) {
                     countryStocks[selectedCountry].forEach(stock => {
                         const option = document.createElement("option");
@@ -44,43 +43,76 @@
             });
 
             form.addEventListener("submit", async (event) => {
-                event.preventDefault(); // Prevent the default form submission
+                event.preventDefault(); 
 
-                // Get form values
                 const selectedCountry = countrySelector.value;
                 const selectedStock = stockDropdown.value;
                 const selectedDate = document.getElementById("date").value;
 
-                // Validate input
                 if (!selectedCountry || !selectedStock || !selectedDate) {
                     alert("Please select a country, stock, and date.");
                     return;
                 }
 
+                loader.style.display = "block"; 
+
                 try {
                     const apiUrl = "https://wv4sbl11ec.execute-api.eu-west-1.amazonaws.com/stock/stock_tracker";
-					// Construct query string parameters
-					const queryString = `?country=${encodeURIComponent(selectedCountry)}&stock=${encodeURIComponent(selectedStock)}&date=${encodeURIComponent(selectedDate)}`;
-                    const response = await fetch(apiUrl + queryString, {
-                        method: "GET",
-                    });
+                    const queryString = `?country=${encodeURIComponent(selectedCountry)}&stock=${encodeURIComponent(selectedStock)}&date=${encodeURIComponent(selectedDate)}`;
+                    
+                    const response = await fetch(apiUrl + queryString, { method: "GET" });
 
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
 
                     const result = await response.json();
-                    //document.getElementById("response").innerText = `Success: ${JSON.stringify(result, null, 2)}`;
-					
-					// Redirect to result.html with the response data in query parameters
-					const encodedResult = encodeURIComponent(JSON.stringify(result));
-					window.location.href = `result.html?data=${encodedResult}`;
+                    const encodedResult = encodeURIComponent(JSON.stringify(result));
+                    window.location.href = `result.html?data=${encodedResult}`;
                 } catch (error) {
                     document.getElementById("response").innerText = `Error: ${error.message}`;
+                } finally {
+                    loader.style.display = "none"; 
                 }
             });
         });
     </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        select, input, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #loader {
+            display: none;
+            margin: 20px auto;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <main>
@@ -112,12 +144,13 @@
                 <br><br>
                 <button type="submit">Submit</button>
             </form>
+            <img id="loader" src="loading.gif" alt="Loading..." width="70">
             <pre id="response"></pre>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 2025 Stock Tracker. All rights reserved.</p>
+        <p>&copy; 2025 Stock Tracker. All rights reserved.</p>
     </footer>
 </body>
 </html>

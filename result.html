@@ -41,6 +41,16 @@
                 document.getElementById("result").textContent = "No data found.";
             }
         });
+
+        // Redirect to index.html on page refresh
+        window.addEventListener("beforeunload", function () {
+            window.location.replace("index.html");
+        });
+
+        // Function to go back to index.html when button is clicked
+        function goBack() {
+            window.location.href = "index.html";
+        }
     </script>
     <style>
         body {
@@ -69,11 +79,32 @@
             background-color: #007bff;
             color: white;
         }
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
         footer {
             margin-top: 20px;
             font-size: 14px;
             color: #666;
         }
+		#loader {
+			width: 150px;
+			height: auto;
+			display: block;
+			margin: 20px auto;
+		}
+
     </style>
 </head>
 <body>
@@ -81,7 +112,12 @@
         <section>
             <h1>Stocks Analysis Result</h1>
             <div id="result"></div>
+            <button class="back-button" onclick="goBack()">Go Back</button>
         </section>
+		<section>
+			<img id="loader" src="Stonks.gif" alt="Loading...">
+            <pre id="response"></pre>
+		</section>
     </main>
     <footer>
         <p>&copy; 2025 Stock Tracker. All rights reserved.</p>
