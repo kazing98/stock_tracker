@@ -8,16 +8,16 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const countryStocks = {
-                "United States": ["Apple", "Microsoft", "Amazon", "Google", "Facebook", "Tesla", "Berkshire Hathaway", "Johnson & Johnson", "Visa", "Procter & Gamble"],
-                "China": ["Alibaba", "Tencent", "Baidu", "JD.com", "Ping An Insurance", "China Mobile", "China Construction Bank", "ICBC", "NetEase", "PetroChina"],
+                "United States": ["Apple", "Microsoft", "Amazon", "Google", "Facebook", "Tesla", "NVIDIA Corporation", "Broadcom Inc.", "Costco Wholesale Corp", "NXP Semiconductors NV"],
+                "China": ["Tencent Holdings Ltd.", "China Mobile Ltd", "China Construction Bank Corporation", "Industrial and Commercial Bank of China Ltd.", "Alibaba Group Holding Ltd.", "Meituan", "JD.com Inc", "Xiaomi Corporation", "Ping An Insurance (Group) Company of China, Ltd.", "China Merchants Bank Co., Ltd."],
                 "Japan": ["Toyota", "SoftBank", "Sony", "Mitsubishi UFJ", "Nintendo", "Honda", "Hitachi", "Panasonic", "Fujitsu", "Canon"],
                 "Germany": ["Volkswagen", "Siemens", "Allianz", "Daimler", "BASF", "BMW", "Bayer", "Deutsche Telekom", "Adidas", "Henkel"],
                 "India": ["Reliance Industries", "TCS", "HDFC Bank", "Infosys", "ICICI Bank", "Bajaj Finance", "Wipro", "Bharti Airtel", "Maruti Suzuki", "State Bank of India"],
                 "United Kingdom": ["HSBC", "BP", "Diageo", "GlaxoSmithKline", "Unilever", "AstraZeneca", "British American Tobacco", "Barclays", "Vodafone", "Rio Tinto"],
                 "France": ["LVMH", "TotalEnergies", "Sanofi", "Schneider Electric", "Airbus", "AXA", "Hermes", "L'Oreal", "BNP Paribas", "Kering"],
-                "Italy": ["Enel", "Intesa Sanpaolo", "Ferrari", "UniCredit", "Generali", "ENI", "Moncler", "Leonardo", "Pirelli", "Fiat Chrysler"],
-                "Canada": ["Royal Bank of Canada", "TD Bank", "Shopify", "Brookfield", "Canadian National Railway", "Enbridge", "Scotiabank", "BCE", "Suncor Energy", "Canadian Pacific"],
-                "South Korea": ["Samsung", "Hyundai", "SK Hynix", "LG Chem", "Kakao", "POSCO", "KB Financial", "Shinhan Financial", "Naver", "Celltrion"]
+                //"Italy": ["Enel", "Intesa Sanpaolo", "Ferrari", "UniCredit", "Generali", "ENI", "Moncler", "Leonardo", "Pirelli", "Fiat Chrysler"],
+                //"Canada": ["Royal Bank of Canada", "TD Bank", "Shopify", "Brookfield", "Canadian National Railway", "Enbridge", "Scotiabank", "BCE", "Suncor Energy", "Canadian Pacific"],
+                //"South Korea": ["Samsung", "Hyundai", "SK Hynix", "LG Chem", "Kakao", "POSCO", "KB Financial", "Shinhan Financial", "Naver", "Celltrion"]
             };
 
             const countryName = document.getElementById("country-name");
@@ -128,9 +128,7 @@
                 <option value="India">India</option>
                 <option value="United Kingdom">United Kingdom</option>
                 <option value="France">France</option>
-                <option value="Italy">Italy</option>
-                <option value="Canada">Canada</option>
-                <option value="South Korea">South Korea</option>
+                
             </select>
             <p>Please select a stock from the dropdown below:</p>
             <form>

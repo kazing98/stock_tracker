@@ -18,14 +18,14 @@
                     // Create an HTML table dynamically
                     let tableHTML = "<table><thead><tr>";
 
-                    // Table Headers
+                    // Table Headers - creating headers dynamically
                     Object.keys(parsedData).forEach(key => {
                         tableHTML += `<th>${key}</th>`;
                     });
 
                     tableHTML += "</tr></thead><tbody><tr>";
 
-                    // Table Data
+                    // Table Data - creating rows dynamically
                     Object.values(parsedData).forEach(value => {
                         tableHTML += `<td>${value}</td>`;
                     });
@@ -34,11 +34,14 @@
 
                     // Display table
                     document.getElementById("result").innerHTML = tableHTML;
+                    document.getElementById("loader").style.display = "none"; // Hide loader when data is ready
                 } catch (error) {
                     document.getElementById("result").textContent = "Error parsing data.";
+                    document.getElementById("loader").style.display = "none"; // Hide loader on error
                 }
             } else {
                 document.getElementById("result").textContent = "No data found.";
+                document.getElementById("loader").style.display = "none"; // Hide loader when no data is found
             }
         });
 
@@ -98,26 +101,30 @@
             font-size: 14px;
             color: #666;
         }
-		#loader {
-			width: 150px;
-			height: auto;
-			display: block;
-			margin: 20px auto;
-		}
-
+        #loader {
+            width: 150px;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+        }
+        #response {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
     <main>
         <section>
             <h1>Stocks Analysis Result</h1>
-            <div id="result"></div>
+            <div id="result"></div> <!-- Table will be inserted here -->
             <button class="back-button" onclick="goBack()">Go Back</button>
         </section>
-		<section>
-			<img id="loader" src="Stonks.gif" alt="Loading...">
+        <section>
+            <img id="loader" src="Stonks.gif" alt="Loading...">
             <pre id="response"></pre>
-		</section>
+        </section>
     </main>
     <footer>
         <p>&copy; 2025 Stock Tracker. All rights reserved.</p>
