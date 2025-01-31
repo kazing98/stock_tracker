@@ -14,10 +14,7 @@
                 "Germany": ["Volkswagen", "Siemens", "Allianz", "Daimler", "BASF", "BMW", "Bayer", "Deutsche Telekom", "Adidas", "Henkel"],
                 "India": ["Reliance Industries", "TCS", "HDFC Bank", "Infosys", "ICICI Bank", "Bajaj Finance", "Wipro", "Bharti Airtel", "Maruti Suzuki", "State Bank of India"],
                 "United Kingdom": ["HSBC", "BP", "Diageo", "GlaxoSmithKline", "Unilever", "AstraZeneca", "British American Tobacco", "Barclays", "Vodafone", "Rio Tinto"],
-                "France": ["LVMH", "TotalEnergies", "Sanofi", "Schneider Electric", "Airbus", "AXA", "Hermes", "L'Oreal", "BNP Paribas", "Kering"],
-                //"Italy": ["Enel", "Intesa Sanpaolo", "Ferrari", "UniCredit", "Generali", "ENI", "Moncler", "Leonardo", "Pirelli", "Fiat Chrysler"],
-                //"Canada": ["Royal Bank of Canada", "TD Bank", "Shopify", "Brookfield", "Canadian National Railway", "Enbridge", "Scotiabank", "BCE", "Suncor Energy", "Canadian Pacific"],
-                //"South Korea": ["Samsung", "Hyundai", "SK Hynix", "LG Chem", "Kakao", "POSCO", "KB Financial", "Shinhan Financial", "Naver", "Celltrion"]
+                "France": ["LVMH", "TotalEnergies", "Sanofi", "Schneider Electric", "Airbus", "AXA", "Hermes", "L'Oreal", "BNP Paribas", "Kering"]
             };
 
             const countryName = document.getElementById("country-name");
@@ -25,6 +22,10 @@
             const countrySelector = document.getElementById("country-selector");
             const form = document.querySelector("form");
             const loader = document.getElementById("loader");
+
+            // Set today's date as the default for the date display
+            const today = new Date().toISOString().split('T')[0]; // Get the current date in YYYY-MM-DD format
+            document.getElementById("date-display").textContent = `Date: ${today}`;
 
             countrySelector.addEventListener("change", (event) => {
                 const selectedCountry = event.target.value;
@@ -35,7 +36,7 @@
                 if (countryStocks[selectedCountry]) {
                     countryStocks[selectedCountry].forEach(stock => {
                         const option = document.createElement("option");
-                        option.value = stock.toLowerCase().replace(/\s+/g, '-');
+                        option.value = stock;
                         option.textContent = stock;
                         stockDropdown.appendChild(option);
                     });
@@ -47,19 +48,19 @@
 
                 const selectedCountry = countrySelector.value;
                 const selectedStock = stockDropdown.value;
-                const selectedDate = document.getElementById("date").value;
+                const selectedDate = document.getElementById("date-display").textContent.split(": ")[1]; // Extract date from the text
+                const selectedTimeRange = document.getElementById("time-range").value;
 
-                if (!selectedCountry || !selectedStock || !selectedDate) {
-                    alert("Please select a country, stock, and date.");
+                if (!selectedCountry || !selectedStock || !selectedDate || !selectedTimeRange) {
+                    alert("Please select a country, stock, date, and time range.");
                     return;
                 }
 
                 loader.style.display = "block"; 
 
                 try {
-                    const apiUrl = "https://wv4sbl11ec.execute-api.eu-west-1.amazonaws.com/stock/stock_tracker";
-                    const queryString = `?country=${encodeURIComponent(selectedCountry)}&stock=${encodeURIComponent(selectedStock)}&date=${encodeURIComponent(selectedDate)}`;
-                    
+                    const apiUrl = "https://08t9exg1i9.execute-api.eu-west-1.amazonaws.com/default/stock_tracker";
+                    const queryString = `?country=${encodeURIComponent(selectedCountry)}&stock=${encodeURIComponent(selectedStock)}&date=${encodeURIComponent(selectedDate)}&time_range=${encodeURIComponent(selectedTimeRange)}`;                    
                     const response = await fetch(apiUrl + queryString, { method: "GET" });
 
                     if (!response.ok) {
@@ -80,25 +81,41 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
             background-color: #f8f9fa;
             margin: 0;
             padding: 20px;
         }
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
         h1 {
             color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #555;
         }
         select, input, button {
-            padding: 10px;
-            margin: 10px;
+            padding: 12px;
+            margin: 10px 0;
             font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
         button {
             background-color: #007bff;
             color: white;
-            border: none;
             cursor: pointer;
-            border-radius: 5px;
         }
         button:hover {
             background-color: #0056b3;
@@ -108,38 +125,59 @@
             margin: 20px auto;
         }
         footer {
-            margin-top: 20px;
+            text-align: center;
+            margin-top: 30px;
             font-size: 14px;
-            color: #666;
+            color: #888;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .date-display {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <main>
         <section>
+            <p id="date-display" class="date-display"></p> <!-- Display date as "Date: <today's date>" -->
             <h1 id="country-name">Selected Country: </h1>
-            <label for="country-selector">Select a Country:</label>
-            <select id="country-selector">
-                <option value="">Select a country</option>
-                <option value="United States">United States</option>
-                <option value="China">China</option>
-                <option value="Japan">Japan</option>
-                <option value="Germany">Germany</option>
-                <option value="India">India</option>
-                <option value="United Kingdom">United Kingdom</option>
-                <option value="France">France</option>
-                
-            </select>
-            <p>Please select a stock from the dropdown below:</p>
-            <form>
-                <label for="stock-dropdown">Stocks:</label>
-                <select id="stock-dropdown" name="stock">
-                    <option value="">Select a stock</option>
+            <div class="form-group">
+                <label for="country-selector">Select a Country:</label>
+                <select id="country-selector">
+                    <option value="">Select a country</option>
+                    <option value="United States">United States</option>
+                    <option value="China">China</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Germany">Germany</option>
+                    <option value="India">India</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="France">France</option>
                 </select>
-                <br><br>
-                <label for="date">Date:</label>
-                <input type="date" id="date" name="date" required>
-                <br><br>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label for="stock-dropdown">Select Stock:</label>
+                    <select id="stock-dropdown" name="stock">
+                        <option value="">Select a stock</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="time-range">Select Time Range:</label>
+                    <select id="time-range" name="time-range">
+                        <option value="1D">1D</option>
+                        <option value="5D">5D</option>
+                        <option value="6M">6M</option>
+                        <option value="YTD">YTD</option>
+                        <option value="1Y">1Y</option>
+                        <option value="5Y">5Y</option>
+                        <option value="MAX">MAX</option>
+                    </select>
+                </div>
                 <button type="submit">Submit</button>
             </form>
             <img id="loader" src="loading.gif" alt="Loading..." width="70">
